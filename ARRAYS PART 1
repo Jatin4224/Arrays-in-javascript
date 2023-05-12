@@ -1,0 +1,272 @@
+ 'use strict';
+
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// BANKIST APP
+
+// Data
+const account1 = {
+  owner: 'Jonas Schmedtmann',
+  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  interestRate: 1.2, // %
+  pin: 1111,
+};
+
+const account2 = {
+  owner: 'Jessica Davis',
+  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+  interestRate: 1.5,
+  pin: 2222,
+};
+
+const account3 = {
+  owner: 'Steven Thomas Williams',
+  movements: [200, -200, 340, -300, -20, 50, 400, -460],
+  interestRate: 0.7,
+  pin: 3333,
+};
+
+const account4 = {
+  owner: 'Sarah Smith',
+  movements: [430, 1000, 700, 50, 90],
+  interestRate: 1,
+  pin: 4444,
+};
+
+const accounts = [account1, account2, account3, account4];
+
+// Elements
+const labelWelcome = document.querySelector('.welcome');
+const labelDate = document.querySelector('.date');
+const labelBalance = document.querySelector('.balance__value');
+const labelSumIn = document.querySelector('.summary__value--in');
+const labelSumOut = document.querySelector('.summary__value--out');
+const labelSumInterest = document.querySelector('.summary__value--interest');
+const labelTimer = document.querySelector('.timer');
+
+const containerApp = document.querySelector('.app');
+const containerMovements = document.querySelector('.movements');
+
+const btnLogin = document.querySelector('.login__btn');
+const btnTransfer = document.querySelector('.form__btn--transfer');
+const btnLoan = document.querySelector('.form__btn--loan');
+const btnClose = document.querySelector('.form__btn--close');
+const btnSort = document.querySelector('.btn--sort');
+
+const inputLoginUsername = document.querySelector('.login__input--user');
+const inputLoginPin = document.querySelector('.login__input--pin');
+const inputTransferTo = document.querySelector('.form__input--to');
+const inputTransferAmount = document.querySelector('.form__input--amount');
+const inputLoanAmount = document.querySelector('.form__input--loan-amount');
+const inputCloseUsername = document.querySelector('.form__input--user');
+const inputClosePin = document.querySelector('.form__input--pin');
+
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// LECTURES
+
+const currencies = new Map([
+  ['USD', 'United States dollar'],
+  ['EUR', 'Euro'],
+  ['GBP', 'Pound sterling'],
+]);
+
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+/////////////////////////////////////////////////
+// why arrays do actually have methods?
+// well remember that methods are simply functions that we can call on objects.so basically,they
+// are functions attached to objects.so if we have array methods,that means that arrays themselves are also objects.
+// and so these array methods are simply functions that are attached to all arrays that we create in javascript.
+
+// (1)-----Simple Array Methods---------
+let arr = ['a', 'b', 'c', 'd', 'e'];
+
+// method-A - slice method
+// with the slice method,we can extract part of any array,but without changing the original array.
+
+//arr.slice(2)-idhr 2 ka matlab 2 k baad se extracting start hogi
+// this slice method will return a new array so we need to log that to the console.in order to actually see it
+
+
+console.log(arr.slice(2));
+
+//now,ofcourse we  can also define the end parameter.
+console.log(arr.slice(2,4));
+
+//just like in strings,we can define a negative begin parameter,and then it will start to copy from the end of the array.
+console.log(arr.slice(-2));
+//op-["d", "e"]
+console.log(arr.slice(-1));
+//op-["e"]
+
+//we can also use a negative index as the end parameter
+console.log(arr.slice(1,-2));
+//op-["b","c"]
+
+console.log(arr.slice());
+// op-["a","b,"c","d","e"]
+console.log(...arr); //spread operator
+//op-["a","b,"c","d","e"]
+
+
+// METHOD-B- SPLICE Methods
+
+console.log(arr.splice(2));
+///op- ["c","d","e"]  results are exactly the same as the first one
+//but now,watch what happend to our original array,
+console.log(arr);
+//op- ["a","b"]
+//so splice actually does mutate the orignal array,so it takes part of the array.
+arr.splice(-1);
+console.log(arr);
+arr.splice(1, 2);
+console.log(arr);
+
+
+//METHOD-C- REVERSE
+arr = ['a', 'b', 'c', 'd', 'e'];
+const arr2 = ['j','i','h','g','f'];
+console.log[arr2.reverse()];
+// op-["f","g","h","i","j"]
+
+// NOTE- the reverse method does actually mutate the orignal array.
+console.log(arr2);
+
+//METHOD-D-CONCAT Method
+// this one is used to concatenate two arrays.
+const letters = arr.concat(arr2);
+console.log(letters);
+//op-["a","b","c","d","e","f","g","h","i","j"]
+console.log(...arr, ...arr2); //this also gives same result nd does not mutate any of the involved arrays.
+
+
+// METHOD-E-JOIN METHOD
+console.log(letters.join('-'));
+//op-  a - b - c - d - e - f - g - h - i - j
+
+
+//------(2)The new at method--------
+
+const arr = [23, 11, 64];
+console.log(arr[0]);//array at position zero.//op-23
+console.log(arr.at(0));//usimng at method //op-23
+
+// Q)getting the last element of the array
+// meth-1
+console.log(arr.length - 1);//op - 64
+//meth-2
+console.log(arr.slice(-1)[0]);//op - 64
+//metho 3 (mentos method -using at method)
+console.log(arr.at(-1));//op - 64
+console.log(arr.at(-2));//op - 11
+
+console.log('jatin'.at(0));//j
+console.log('jatin'.at(-1));//s
+
+//------(3)Looping Arrays: forEach method--------(due)
+// we will loop over an array  using forEach method.
+
+//and now on we will start working with our bank account but still in a very simplified way.
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];//so these psoitive values here are basically deposits and the negative values are withdrawals.
+//and so we can print something to the console saying whether the user deposited or withdraw some money,and let's actually start by doing this using a for loop.
+// just so that we can then compare the forEach loop to this one.
+
+ for (const movement of movements) {
+   if(movement > 0 ) {
+     console.log(`You deposited ${movement}`);
+   }
+   else {
+     console.log(`You withdraw ${Math.abs(movement)}`);
+   }
+
+}
+//op -
+// You deposited 200
+// You deposited 450
+// You withdraw 400
+// You deposited 3000
+// You withdraw 650
+// You withdraw 130
+// You deposited 70
+// You deposited 1300
+
+
+ //using forEach method
+ movement.forEach{function(movement){
+   if(movement > 0 ) {
+     console.log(`You deposited ${movement}`);
+   }
+   else {
+     console.log(`You withdraw ${Math.abs(movement)}`);
+   }
+
+}
+ //for  forEach actually requires a callback function.
+ //note - forEach is technically a higher order function.
+
+//well what the forEach method does is to loop over the array,and in each iteration it will execute this callback function here.Also as the forEach method calls this callback function in each iteration it will pass in the current element
+// current element of the array as an argument,and we can specify that here and let's called that just movement(koi bhi name de sakte ho hum movement dere h ).
+
+//op -
+// You deposited 200
+// You deposited 450
+// You withdraw 400
+// You deposited 3000
+// You withdraw 650
+// You withdraw 130
+// You deposited 70
+// You deposited 1300
+
+
+//behind the scenes
+//iteration 0: function(200)
+// 1: function(450)
+// 2: function(400)
+//....
+
+//more about the forEach method.
+
+
+//entries is in fact jsut another array method and it returns an array of arrays,which in the first position contains the current index and then the value itself.
+
+for (const [i, movement] of movements.entries())//so this is how we access the counter variable in the for of loop.
+
+
+
+
+
+
+ //---forEach----
+ movements.forEach(function (mov, i, arr){
+   if (mov > 0) {
+     console.log(`Movement ${i + 1}: You deposited ${mov}`);
+   }
+   else {
+     console.log(`Movement ${i + 1}: You withdraw ${Math.abs(mov)}`);
+
+   }
+ }
+
+ //Q) WHEN SHOULD YOU USE FOREACH AND WHEN SHOULD YOU USE THE FOR OF LOOP.
+//
+// -one fundamental difference between the two of them is that you cannot break out of a forEach loop. so the continue and break statements do not work in a forEach loop at all.
+// so instead,forEach will always loop over the entire array and there is nothing that you can do about it.so if you really need to break out of a loop then you have to keep using the for of loop.
+
+
+//-----(4) forEach With Maps and Sets------
+
+//-----Map-----
+const currencies = new Map([
+  ['USD', 'united states dollar'],
+  ['EUR', 'Euro'],
+  ['GBP', 'pound sterling'],
+]);
+
+currencies.forEach(function (value, key, map) {
+  console.log(`${key}: ${value}`);
+});
+
+//-----Set------
+const currenciesUnique =  new Set(['USD', 'GSD', 'USD', 'EUR', 'EUR']);
+console.log(currenciesUnique);
