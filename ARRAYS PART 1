@@ -270,3 +270,19 @@ currencies.forEach(function (value, key, map) {
 //-----Set------
 const currenciesUnique =  new Set(['USD', 'GSD', 'USD', 'EUR', 'EUR']);
 console.log(currenciesUnique);
+
+
+//5) Data transformations: map, filter, reduce
+// these are big and important array methods that we use all the time to perform data transformations.so basically these
+// are methods that we use to create new arrays based on transforming data from other arrays.
+
+1)---MAP----
+//- the map method takes an array,loops over that array and in each iteration it applies a callback function that we specify on our code to the current array element.
+//- more useful than in forEach method.
+
+2)----filter---
+filter returns a new array containing the array Elements taht passed a specified test conditon.
+
+3)-----reduce-----
+reduce boils("reduces") all array elements down to one single value(eg.adding all elements together)
+
